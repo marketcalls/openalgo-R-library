@@ -1,0 +1,12 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.md$
+^CLAUDE\.md$
+^tools$
+^examples$
+^\.github$
+^\.env$
+^.*\.tar\.gz$
+^openalgo\.Rcheck$
+^cran-comments\.md$

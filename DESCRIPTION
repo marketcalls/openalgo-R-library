@@ -1,0 +1,47 @@
+Package: openalgo
+Type: Package
+Title: Client for the 'OpenAlgo' Algorithmic Trading Platform
+Version: 1.0.0
+Authors@R: person("Rajandran", "R", email = "rajandran@marketcalls.in", role = c("aut", "cre", "cph"))
+Description: Client for the 'OpenAlgo' algorithmic trading platform
+    <https://openalgo.in>, a self-hosted application that connects to a
+    stock broker account. Wraps the 'OpenAlgo' REST API (orders, good till
+    triggered orders, market data, account, options, strategy module,
+    notifications and market calendar utilities), the strategy webhook and
+    the 'WebSocket' market data feed. Function names, parameters and request
+    payloads follow the official 'OpenAlgo' 'Python' software development kit.
+License: MIT + file LICENSE
+URL: https://github.com/marketcalls/openalgo-R-library, https://docs.openalgo.in
+BugReports: https://github.com/marketcalls/openalgo-R-library/issues
+Encoding: UTF-8
+Depends: R (>= 4.1.0)
+Imports:
+    R6,
+    curl,
+    jsonlite,
+    websocket,
+    later
+Suggests:
+    testthat (>= 3.0.0),
+    webfakes,
+    httpuv
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE, r6 = FALSE)
+Collate:
+    'utils.R'
+    'base.R'
+    'orders.R'
+    'gtt.R'
+    'data.R'
+    'account.R'
+    'options.R'
+    'strategy_api.R'
+    'telegram.R'
+    'whatsapp.R'
+    'utilities.R'
+    'extensions.R'
+    'feed.R'
+    'api.R'
+    'strategy.R'
+    'openalgo-package.R'
+Config/roxygen2/version: 8.1.1
