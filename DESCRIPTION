@@ -3,9 +3,9 @@ Type: Package
 Title: Client for the 'OpenAlgo' Algorithmic Trading Platform
 Version: 1.0.0
 Authors@R: person("Rajandran", "R", email = "rajandran@marketcalls.in", role = c("aut", "cre", "cph"))
-Description: Client for the 'OpenAlgo' algorithmic trading platform
-    <https://openalgo.in>, a self-hosted application that connects to a
-    stock broker account. Wraps the 'OpenAlgo' REST API (orders, good till
+Description: Provides access to 'OpenAlgo' <https://openalgo.in>, a
+    self-hosted algorithmic trading application that connects to a stock
+    broker account. Wraps the 'OpenAlgo' REST API (orders, good till
     triggered orders, market data, account, options, strategy module,
     notifications and market calendar utilities), the strategy webhook and
     the 'WebSocket' market data feed. Function names, parameters and request
