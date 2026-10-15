@@ -1,5 +1,6 @@
-# Additional REST endpoints (R/extensions.R): documented OpenAlgo server
-# endpoints the Python SDK does not wrap. POSTs use the make_request response
+# Additional REST endpoints (R/extensions.R): ping, pnlsymbols,
+# multioptiongreeks, ticker, chart and Telegram management. POSTs use the
+# make_request response
 # handling; GETs send the API key and parameters in the query string.
 
 skip_if_not_installed("webfakes")

@@ -1,4 +1,4 @@
-# Strategy webhook sender (Python: openalgo/strategy.py, class Strategy).
+# Strategy webhook sender (Strategy()).
 # Posts to <host>/strategy/webhook/<token> with no API key.
 
 skip_if_not_installed("webfakes")

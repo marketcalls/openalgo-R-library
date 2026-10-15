@@ -1,4 +1,4 @@
-# Market data methods (Python: openalgo/data.py). Extra keyword arguments
+# Market data methods. Extra keyword arguments
 # are sent as given (not stringified); history() and instruments() return
 # data frames.
 

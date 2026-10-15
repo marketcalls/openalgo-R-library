@@ -1,4 +1,4 @@
-# Account methods (Python: openalgo/account.py). Extra keyword arguments are
+# Account methods. Extra keyword arguments are
 # sent as given; margin() validates and stringifies its positions.
 
 skip_if_not_installed("webfakes")

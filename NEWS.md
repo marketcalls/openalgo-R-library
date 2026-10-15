@@ -3,73 +3,68 @@
 First release of the R client for OpenAlgo, the self-hosted algorithmic trading platform.
 It lets you place and manage orders, read positions and funds, pull historical candles
 into a `data.frame`, work with option chains and Greeks, run the strategy module and
-stream live prices and order updates from R, RStudio or a scheduled `Rscript` job. It is
-installed from GitHub (`remotes::install_github("marketcalls/openalgo-R-library")`), not
-from CRAN, and needs R 4.1 or newer.
+stream live prices and order updates from R, RStudio or a scheduled `Rscript` job. It
+needs R 4.1 or newer.
 
-## What it covers
+## Orders
 
-* Mirrors the OpenAlgo Python SDK 2.0.5: the same method names, parameter names and
-  defaults (including the default strategy name `"Python"`), the same request payloads,
-  the same response shapes and the same error lists with their `error_type` values. Code
-  and documentation written for the Python SDK carry over method by method.
-* REST: orders (place, smart, basket, split, modify, cancel, cancel all, close position,
-  order status, open position), GTT orders with the Python SDK's local trigger
-  validation, market data (quotes, multi-quotes, depth, symbol, search, history,
-  intervals, expiry, instruments, synthetic future), account (funds, order book, trade
-  book, position book, holdings, margin, analyzer status and toggle), options (option
-  Greeks, options order, option symbol, options multi-order, option chain), the strategy
-  module, Telegram and WhatsApp notifications, and market holidays and timings.
-* The strategy webhook client (`Strategy()`), with the token never printed.
-* The WebSocket feed: LTP, quotes, depth and account order updates, with polling
-  snapshots, three verbose levels and auto-reconnect that replays every subscription.
-* Decimal values are sent exactly as the Python SDK sends them (the shortest round-trip
-  representation, as Python's `json.dumps` writes it), so the same order reaches the
-  server with the same digits from either SDK.
+* Place, smart, basket and split orders, modify, cancel, cancel all, close position,
+  order status and open position.
+* Options orders by offset (ATM, ITMn, OTMn), multi-leg options orders with the same or
+  different expiries, and option symbol lookup.
+* GTT orders (SINGLE and OCO): place, modify, cancel and the GTT order book, with an
+  impossible trigger refused locally before anything is sent.
 
-## Additions not in the Python SDK
+## Market data
 
-* REST methods for documented server endpoints the Python SDK does not wrap: `ping()`,
-  `pnlsymbols()`, `multioptiongreeks(symbols, interest_rate, expiry_time)`,
-  `ticker(symbol, exchange, interval = "D", start_date, end_date, format = "json")` (also
-  `format = "txt"`), `chart()`, `updatechart(...)`, `telegramconfig()`,
-  `updatetelegramconfig(...)`, `telegramstart()`, `telegramstop()`,
-  `telegramusers(...)`, `telegrambroadcast(message, ...)`, `telegramstats(days)`,
-  `telegrampreferences(telegram_id)` and `updatetelegrampreferences(telegram_id, ...)`.
-* Hosted servers: an `https://yourdomain.com` host gives the feed URL
-  `wss://yourdomain.com/ws` automatically. The Python SDK always builds
-  `ws://<host>:8765`. An explicit `ws_url` still overrides both.
-* `subscribe_depth(..., depth = 5)` requests 20, 30 or 50 levels where the broker
-  supports them; the level is replayed on reconnect.
-* Feed methods for server actions the Python SDK does not send: `unsubscribe_all()`,
-  `get_broker_info(timeout)`, `get_supported_brokers(timeout)` and `ws_ping(timeout)`
-  (round trip in `latency_ms`).
-* At `verbose = 1` the feed also prints server error frames and the server's unsubscribe
-  acknowledgements.
+* Quotes, multi-quotes, market depth, symbol details, search, expiry dates, intervals,
+  instruments (as a `data.frame`) and synthetic futures.
+* `history()` returns a `data.frame` with a `POSIXct` `timestamp` first column, from the
+  broker or from the server's stored data.
+* `ticker()` returns candles as JSON records or as plain text rows.
+* Option chain, option Greeks for one option and `multioptiongreeks()` for up to 50
+  options in one request.
 
-## Known differences from the Python SDK
+## Account and utilities
 
-* Methods are called with `$` and named arguments; an unnamed extra argument is an error.
-  Python `dict`, `True`/`False`/`None` and pandas DataFrames map to named lists,
-  `TRUE`/`FALSE`/`NULL` and `data.frame`.
-* `history()` returns a `data.frame` with `timestamp` as its first column (`POSIXct`,
-  `Asia/Kolkata` for intraday, `UTC` for daily, weekly and monthly) instead of a
-  timestamp index.
-* R is single threaded, so the feed runs on the `later` event loop rather than a
-  background thread. Scripts call `client$wait(seconds)` where a Python script would
-  call `time.sleep()`, and `wait()`, `connect()` and the feed query methods must not be
-  called from inside a feed callback.
-* The WebSocket `ping_interval` and `ping_timeout` settings are not configurable.
-* `client$close()` replaces the Python context manager.
-* With an `https://` host the R client connects to `wss://<domain>/ws`, while a Python
-  script given the same host tries `ws://<domain>:8765`.
+* Funds, margin, order book, trade book, position book and holdings.
+* `ping()` checks that the API key works and the broker session is logged in.
+* Analyzer (sandbox) mode status and toggle, and `pnlsymbols()` for today's P&L per
+  symbol in sandbox mode.
+* Market holidays and timings.
+* Chart preferences: `chart()` and `updatechart()`.
 
-## Not included
+## Notifications
 
-* Technical indicators (`openalgo.ta`).
-* The server's portfolio backtester (`/api/v1/portfolio/*`) and SIP backtester
-  (`/api/v1/sip/*`) endpoints. The server has them, but they are not in the public API
-  documentation, so the client does not wrap them.
+* Telegram alerts with `telegram()`, and Telegram bot management: configuration, start
+  and stop, linked users, broadcast, statistics and per-user preferences.
+* WhatsApp messages with `whatsapp()`: to yourself, one number or up to 5 numbers, with
+  text, images or documents.
+
+## Strategy module
+
+* Strategy list, status, start, stop, close all, close leg, runs, orders and events, with
+  `mode` required on start.
+* `Strategy()` webhook client for batch (`start`, `stop`) and signal (`long_entry`,
+  `long_exit`, `short_entry`, `short_exit`) strategies. Every documented outcome is
+  returned with its `result` label, and the webhook token is never printed.
+
+## WebSocket feed
+
+* LTP, quotes, market depth (5, 20, 30 or 50 levels, broker dependent) and account
+  order updates, with callbacks or polling snapshots.
+* `unsubscribe_all()`, `get_broker_info()`, `get_supported_brokers()` and `ws_ping()`.
+* Callbacks run on the R event loop; scripts keep the feed running with
+  `client$wait(seconds)`.
+* An `https://` host connects the feed to `wss://<domain>/ws` automatically; `ws_url`
+  overrides it.
+* Three verbose levels and auto-reconnect that re-authenticates and replays every
+  subscription.
+
+## Errors
+
+* Failures are returned as lists with `status = "error"`, a `message` and an
+  `error_type`, never raised, so a trading loop handles them like any other response.
 
 ## Testing
 

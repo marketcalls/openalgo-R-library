@@ -1,4 +1,4 @@
-# Market calendar utilities (Python: openalgo/utilities.py). No extra
+# Market calendar utilities. No extra
 # keyword arguments are accepted.
 
 skip_if_not_installed("webfakes")

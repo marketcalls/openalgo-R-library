@@ -519,7 +519,7 @@ test_that("strategy webhook round trip", {
   s$close()
 })
 
-test_that("additional endpoints beyond the Python SDK (read-only)", {
+test_that("additional endpoints (read-only)", {
   live_expect("ping", live$ping(), function(x) {
     expect_identical(x$data$message, "pong")
   }, tolerate = NULL)

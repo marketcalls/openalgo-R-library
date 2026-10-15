@@ -1,4 +1,4 @@
-# WebSocket feed additions (server actions the Python SDK does not wrap):
+# WebSocket feed utilities:
 # the depth level of subscribe_depth(), unsubscribe_all(), get_broker_info(),
 # get_supported_brokers(), ws_ping(), acknowledgement and error logging, and
 # the wss URL derivation for https hosts. Runs against an in-process server
@@ -139,7 +139,7 @@ test_that("an https host derives the production wss URL", {
                    "wss://algo.example.com/ws")
   expect_identical(api("k", host = "https://algo.example.com", ws_url = "wss://other/feed")$ws_url,
                    "wss://other/feed")
-  # http hosts keep the Python derivation.
+  # http hosts derive ws://<hostname>:<ws_port>.
   expect_identical(api("k")$ws_url, "ws://127.0.0.1:8765")
   expect_identical(api("k", host = "http://localhost:5000/", ws_port = 9000)$ws_url,
                    "ws://localhost:9000")

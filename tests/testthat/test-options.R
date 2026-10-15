@@ -1,4 +1,4 @@
-# Options methods (Python: openalgo/options.py). optionsorder and
+# Options methods. optionsorder and
 # optionsymbol stringify extra keyword arguments, the others send them as
 # given; strike_int (and optionsymbol's strategy) is deprecated.
 
@@ -114,7 +114,7 @@ test_that("optionsmultiorder strike_int is deprecated and sent as an integer", {
   expect_length(req$json$legs, 2L)
   expect_identical(names(req$json), c("apikey", "strategy", "underlying", "exchange", "legs",
                                       "strike_int"))
-  # A leg without a required key fails like Python's KeyError, before sending.
+  # A leg without a required key fails before sending.
   mock_reset()
   expect_error(cl$optionsmultiorder(strategy = "S", underlying = "NIFTY", exchange = "NSE_INDEX",
                                     legs = list(list(offset = "ATM", option_type = "CE",

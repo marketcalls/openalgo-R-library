@@ -121,7 +121,7 @@ test_that("connect authenticates with the exact auth frame and logs a masked key
   expect_true(paste0("[WS]     Disconnected from ", srv$url) %in% out)
 })
 
-test_that("subscribe and unsubscribe send the Python message shapes", {
+test_that("subscribe and unsubscribe send the protocol message shapes", {
   srv <- fake_proxy()
   on.exit(srv$stop(), add = TRUE)
   client <- new_feed_client(srv)
@@ -384,7 +384,7 @@ test_that("order history is capped at 500, most recent first", {
   expect_identical(orders[[500]]$orderid, "6")
 })
 
-test_that("verbose 2 prints the Python debug lines", {
+test_that("verbose 2 prints the debug lines", {
   client <- api(api_key = test_key, ws_url = "ws://127.0.0.1:9", verbose = 2)
   priv <- private_of(client)
   out <- capture.output({

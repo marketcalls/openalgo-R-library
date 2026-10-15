@@ -1,5 +1,4 @@
-# Client construction and the shared request helpers (Python: base.py and
-# the api() constructor in __init__.py).
+# Client construction and the shared request helpers.
 
 skip_if_not_installed("webfakes")
 skip_if_not_installed("httpuv")
@@ -22,17 +21,17 @@ test_that("api() sets the REST and WebSocket configuration", {
   expect_identical(cl$timeout, 5)
   expect_identical(cl$verbose, 1L)
   expect_false(cl$auto_reconnect)
-  # An R addition to the Python rule: an https host maps to
+  # An https host maps to
   # wss://<host[:port]>/ws and ws_port is unused.
   expect_identical(cl$ws_url, "wss://algo.example.com:5000/ws")
   expect_identical(cl$ws_host, "algo.example.com")
 
-  # The Python rule for any other host: ws://<hostname>:<ws_port>.
+  # Any other host: ws://<hostname>:<ws_port>.
   cl <- api(api_key = "k", host = "http://algo.example.com:5000/x", ws_port = 9000)
   expect_identical(cl$ws_url, "ws://algo.example.com:9000")
   expect_identical(cl$ws_host, "algo.example.com")
 
-  # A custom ws_url wins; a trailing slash on host is kept as Python keeps it.
+  # A custom ws_url wins; a trailing slash on host is kept.
   cl <- api(api_key = "k", host = "http://h:5000/", ws_url = "wss://feed.example.com/ws")
   expect_identical(cl$ws_url, "wss://feed.example.com/ws")
   expect_identical(cl$base_url, "http://h:5000//api/v1/")
@@ -68,7 +67,7 @@ test_that("make_request response handling covers every path", {
   expect_identical(cl$funds(), list(status = "error", message = NULL, code = 200L,
                                     error_type = "api_error"))
 
-  # Other non-object JSON values report their Python type name.
+  # Other non-object JSON values report their JSON type name.
   for (case in list(c("\"text\"", "str"), c("5", "int"), c("true", "bool"),
                     c("null", "NoneType"))) {
     mock_reset()

@@ -1,7 +1,6 @@
-# Telegram and WhatsApp notifications (Python: openalgo/telegram.py and
-# openalgo/whatsapp.py). In the unified Python client both resolve
-# _make_request and _handle_response from OrderAPI (first in the MRO), so a
-# non-200 answer is "HTTP <code>: <body>" for WhatsApp too.
+# Telegram and WhatsApp notifications. Both use the shared order-surface
+# response handling, so a non-200 answer is "HTTP <code>: <body>" for
+# WhatsApp too.
 
 skip_if_not_installed("webfakes")
 skip_if_not_installed("httpuv")

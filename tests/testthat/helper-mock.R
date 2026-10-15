@@ -200,7 +200,7 @@ call_mock <- function(endpoint, fn, json = list(status = "success"), status = 20
 }
 
 # The response handling paths shared by every surface that uses
-# make_request (Python: _make_request plus _handle_response). `call` is a
+# make_request. `call` is a
 # function(client) performing one request to `endpoint`. Transport failures
 # are covered by check_client_transport_errors().
 check_make_request_paths <- function(endpoint, call) {
@@ -243,7 +243,7 @@ check_make_request_paths <- function(endpoint, call) {
     status = "error", message = "Invalid JSON response from server",
     raw_response = "not json", error_type = "json_error"))
 
-  # A JSON array on 200: Python calls .get() on a list and reports it.
+  # A JSON array on 200 is reported as an unknown_error.
   mock_reset()
   mock_respond(path, body = "[1,2]")
   testthat::expect_identical(call(client), list(

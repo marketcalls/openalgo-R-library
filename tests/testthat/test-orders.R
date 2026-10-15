@@ -1,4 +1,4 @@
-# Order methods (Python: openalgo/orders.py). Every numeric field and every
+# Order methods. Every numeric field and every
 # extra keyword argument is sent as a string (str(value)), None is skipped.
 
 skip_if_not_installed("webfakes")
@@ -102,7 +102,7 @@ test_that("a basket with one order stays a JSON array", {
   expect_length(r$request$json$orders, 1L)
 })
 
-test_that("splitorder keeps the Python key order", {
+test_that("splitorder keeps the documented key order", {
   cl <- mock_client()
   r <- call_mock("splitorder", function() {
     cl$splitorder(symbol = "YESBANK", exchange = "NSE", action = "SELL", quantity = 105,

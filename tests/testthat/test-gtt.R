@@ -1,4 +1,4 @@
-# GTT methods (Python: openalgo/gtt.py). Numeric fields go out as JSON
+# GTT methods. Numeric fields go out as JSON
 # numbers, SINGLE sends stoploss and target as JSON null, validation errors
 # are returned (not raised) before any request, and responses go through
 # BaseAPI._post.

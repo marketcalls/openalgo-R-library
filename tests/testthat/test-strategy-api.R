@@ -1,4 +1,4 @@
-# Strategy module methods (Python: openalgo/strategy_api.py). Every route
+# Strategy module methods. Every route
 # is a POST to /api/v1/strategy/<route>, ids are sent as integers, NULL
 # filters are omitted and responses go through BaseAPI._post.
 
