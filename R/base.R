@@ -10,20 +10,20 @@ BaseAPI <- R6::R6Class(
   "BaseAPI",
   cloneable = FALSE,
   public = list(
-    #' @field api_key User's API key.
+    # @field api_key User's API key.
     api_key = NULL,
-    #' @field base_url REST base URL, `"{host}/api/{version}/"`.
+    # @field base_url REST base URL, `"{host}/api/{version}/"`.
     base_url = NULL,
-    #' @field headers Headers sent with every POST.
+    # @field headers Headers sent with every POST.
     headers = NULL,
-    #' @field timeout Request timeout in seconds.
+    # @field timeout Request timeout in seconds.
     timeout = NULL,
 
-    #' @description Initialize the client configuration.
-    #' @param api_key User's API key.
-    #' @param host Base URL for the API endpoints.
-    #' @param version API version.
-    #' @param timeout Request timeout in seconds.
+    # @description Initialize the client configuration.
+    # @param api_key User's API key.
+    # @param host Base URL for the API endpoints.
+    # @param version API version.
+    # @param timeout Request timeout in seconds.
     initialize = function(api_key, host = "http://127.0.0.1:5000", version = "v1", timeout = 120.0) {
       self$api_key <- api_key
       self$base_url <- paste0(host, "/api/", version, "/")
@@ -32,7 +32,7 @@ BaseAPI <- R6::R6Class(
       invisible(self)
     },
 
-    #' @description Release the pooled HTTP connections.
+    # @description Release the pooled HTTP connections.
     close = function() {
       private$post_handle <- NULL
       private$get_handle <- NULL

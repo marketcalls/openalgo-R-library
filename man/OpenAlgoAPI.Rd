@@ -3,25 +3,6 @@
 \name{OpenAlgoAPI}
 \alias{OpenAlgoAPI}
 \title{OpenAlgo API client}
-\arguments{
-\item{api_key}{User's API key.}
-
-\item{host}{Base URL for the API endpoints.}
-
-\item{version}{API version.}
-
-\item{timeout}{Request timeout in seconds.}
-
-\item{ws_port}{WebSocket server port.}
-
-\item{ws_url}{Custom WebSocket URL, overrides \code{host} and \code{ws_port}.}
-
-\item{verbose}{Feed logging level (\code{FALSE}/0, \code{TRUE}/1 or 2).}
-
-\item{auto_reconnect}{Reconnect automatically after a drop.}
-
-\item{...}{Unused.}
-}
 \description{
 The OpenAlgo client: one object carrying every REST method (orders, GTT
 orders, market data, account, options, strategy module, notifications and
@@ -31,46 +12,4 @@ and for advanced use.
 
 Methods are called with \code{$}, for example \code{client$placeorder(...)}, and take
 the same parameter names as the Python SDK. See \code{\link[=api]{api()}} for the method list.
-
-Create a client. Prefer \code{\link[=api]{api()}}.
-
-Print a summary without revealing the API key.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{verbose}}{Feed logging level: 0 silent, 1 basic, 2 full debug.}
-
-\item{\code{ws_port}}{WebSocket server port.}
-
-\item{\code{ws_host}}{WebSocket host derived from \code{host}.}
-
-\item{\code{ws_url}}{WebSocket URL.}
-
-\item{\code{ws}}{The underlying WebSocket connection, or \code{NULL}.}
-
-\item{\code{connected}}{\code{TRUE} while the WebSocket is open.}
-
-\item{\code{authenticated}}{\code{TRUE} once the WebSocket is authenticated.}
-
-\item{\code{ltp_data}}{Latest LTP per \code{"EXCHANGE:SYMBOL"}.}
-
-\item{\code{quotes_data}}{Latest quote per \code{"EXCHANGE:SYMBOL"}.}
-
-\item{\code{depth_data}}{Latest depth per \code{"EXCHANGE:SYMBOL"}.}
-
-\item{\code{order_data}}{Order updates received, most recent first (max 500).}
-
-\item{\code{ltp_callback}}{Callback for LTP updates.}
-
-\item{\code{quote_callback}}{Callback for quote updates.}
-
-\item{\code{quotes_callback}}{Reserved (kept for parity with the Python SDK).}
-
-\item{\code{depth_callback}}{Callback for depth updates.}
-
-\item{\code{order_callback}}{Callback for order updates.}
-
-\item{\code{auto_reconnect}}{Reconnect and replay subscriptions after a drop.}
-}}
-

@@ -29,19 +29,19 @@ OpenAlgoStrategy <- R6::R6Class(
   "OpenAlgoStrategy",
   cloneable = FALSE,
   public = list(
-    #' @field timeout Request timeout in seconds given at construction. As in
-    #'   the Python SDK, the connection keeps the timeout it was created with.
+    # @field timeout Request timeout in seconds given at construction. As in
+    #   the Python SDK, the connection keeps the timeout it was created with.
     timeout = NULL,
 
-    #' @description Initialize the webhook sender. Prefer [Strategy()].
-    #' @param host_url OpenAlgo server URL, for example
-    #'   `"http://127.0.0.1:5000"`.
-    #' @param webhook_id The strategy's webhook token (legacy name).
-    #' @param ... Not accepted; present so the following arguments must be
-    #'   named.
-    #' @param webhook_token The webhook token under its accurate name. Wins
-    #'   over `webhook_id`.
-    #' @param timeout Request timeout in seconds.
+    # @description Initialize the webhook sender. Prefer [Strategy()].
+    # @param host_url OpenAlgo server URL, for example
+    #   `"http://127.0.0.1:5000"`.
+    # @param webhook_id The strategy's webhook token (legacy name).
+    # @param ... Not accepted; present so the following arguments must be
+    #   named.
+    # @param webhook_token The webhook token under its accurate name. Wins
+    #   over `webhook_id`.
+    # @param timeout Request timeout in seconds.
     initialize = function(host_url, webhook_id = NULL, ..., webhook_token = NULL, timeout = 30.0) {
       no_extra_args("Strategy", ...)
       token <- if (!is.null(webhook_token)) webhook_token else webhook_id
@@ -61,31 +61,31 @@ OpenAlgoStrategy <- R6::R6Class(
       invisible(self)
     },
 
-    #' @description Release the pooled HTTP connection. A later call opens a
-    #'   new one.
+    # @description Release the pooled HTTP connection. A later call opens a
+    #   new one.
     close = function() {
       private$handle <- NULL
       invisible(NULL)
     },
 
-    #' @description Print the sender without revealing the token.
-    #' @param ... Unused.
+    # @description Print the sender without revealing the token.
+    # @param ... Unused.
     print = function(...) {
       cat(sprintf("Strategy(host_url='%s', webhook_token=<redacted>)\n", private$host_url))
       invisible(self)
     },
 
-    #' @description Post a raw payload to the webhook and return the parsed
-    #'   response. Every documented outcome is returned rather than raised,
-    #'   including rejections, because the `result` label is the contract: a
-    #'   409 `rejected_cooling_off` and a 200 `rejected_dedupe` both need
-    #'   reading. Only a transport failure or a non-JSON answer produces a
-    #'   locally built error list.
-    #' @param payload A named list, the JSON body to send.
-    #' @return The server's response as a named list, with `code` attached
-    #'   when the HTTP status was not 200 (and `status` defaulted to
-    #'   `"error"`). It carries `status`, `result`, `message` and, where
-    #'   applicable, `strategy_id`, `run_id`, `stop_pending` and `exits`.
+    # @description Post a raw payload to the webhook and return the parsed
+    #   response. Every documented outcome is returned rather than raised,
+    #   including rejections, because the `result` label is the contract: a
+    #   409 `rejected_cooling_off` and a 200 `rejected_dedupe` both need
+    #   reading. Only a transport failure or a non-JSON answer produces a
+    #   locally built error list.
+    # @param payload A named list, the JSON body to send.
+    # @return The server's response as a named list, with `code` attached
+    #   when the HTTP status was not 200 (and `status` defaulted to
+    #   `"error"`). It carries `status`, `result`, `message` and, where
+    #   applicable, `strategy_id`, `run_id`, `stop_pending` and `exits`.
     send = function(payload) {
       body <- to_json(payload)
       resp <- tryCatch(private$perform(body), curl_error = function(e) e)
@@ -95,52 +95,52 @@ OpenAlgoStrategy <- R6::R6Class(
       parse_post_response(resp, non_json_as_http = TRUE)
     },
 
-    #' @description Start a batch strategy: enter every leg. Live is opt-in
-    #'   per strategy: `mode = "live"` on a strategy without live trading
-    #'   enabled answers 403 `rejected_live_disabled`. Two identical starts
-    #'   within 60 seconds are one signal (`rejected_dedupe`, reported as a
-    #'   success). A strategy stopped within the last 30 seconds refuses a
-    #'   start with 409 `rejected_cooling_off`. A start against a signal
-    #'   strategy is `rejected_invalid_action`.
-    #' @param mode `"live"` or `"sandbox"`. Required, exact and
-    #'   case-sensitive on the server. There is no default.
-    #' @return A named list with `status`, `result`, `message`,
-    #'   `strategy_id` and `run_id`.
+    # @description Start a batch strategy: enter every leg. Live is opt-in
+    #   per strategy: `mode = "live"` on a strategy without live trading
+    #   enabled answers 403 `rejected_live_disabled`. Two identical starts
+    #   within 60 seconds are one signal (`rejected_dedupe`, reported as a
+    #   success). A strategy stopped within the last 30 seconds refuses a
+    #   start with 409 `rejected_cooling_off`. A start against a signal
+    #   strategy is `rejected_invalid_action`.
+    # @param mode `"live"` or `"sandbox"`. Required, exact and
+    #   case-sensitive on the server. There is no default.
+    # @return A named list with `status`, `result`, `message`,
+    #   `strategy_id` and `run_id`.
     start = function(mode) {
       self$send(list(action = "start", mode = mode))
     },
 
-    #' @description Stop a batch strategy: exit every owned position at
-    #'   market. "Strategy stop accepted" means the durable request reached
-    #'   the engine, not that the broker is flat: `stop_pending = TRUE` keeps
-    #'   the run current and managed until exit fills confirm it is flat. A
-    #'   stop is never blocked by the cooling-off window.
-    #' @return A named list with `status`, `result`, `message`,
-    #'   `strategy_id`, `run_id`, `stop_pending` and `exits`.
+    # @description Stop a batch strategy: exit every owned position at
+    #   market. "Strategy stop accepted" means the durable request reached
+    #   the engine, not that the broker is flat: `stop_pending = TRUE` keeps
+    #   the run current and managed until exit fills confirm it is flat. A
+    #   stop is never blocked by the cooling-off window.
+    # @return A named list with `status`, `result`, `message`,
+    #   `strategy_id`, `run_id`, `stop_pending` and `exits`.
     stop = function() {
       self$send(list(action = "stop"))
     },
 
-    #' @description Send a signal strategy action, naming the leg by id or by
-    #'   symbol. A signal that does nothing is a success with a note, not a
-    #'   failure, for example `Signal accepted (already_long)`; the notes are
-    #'   `already_long`, `already_short`, `no_matching_position`,
-    #'   `outside_entry_window` and `outside_trading_window`. A signal blocked
-    #'   by the strategy's direction, or naming a leg that does not exist,
-    #'   answers 400 `rejected_invalid_action`. An opposite entry squares the
-    #'   existing side first, then opens. Signal actions skip the dedupe and
-    #'   cooling-off windows. A leg on a derivatives exchange must name an
-    #'   exact listed contract.
-    #' @param action `"long_entry"`, `"long_exit"`, `"short_entry"` or
-    #'   `"short_exit"`.
-    #' @param ... Not accepted; present so the following arguments must be
-    #'   named.
-    #' @param leg_id Which leg the signal targets (sent as an integer). Wins
-    #'   over `symbol` and `exchange` on the server when both are given.
-    #' @param symbol Leg symbol, used when `leg_id` is absent.
-    #' @param exchange Exchange for `symbol`.
-    #' @return A named list with `status`, `result`, `message`,
-    #'   `strategy_id` and `run_id`.
+    # @description Send a signal strategy action, naming the leg by id or by
+    #   symbol. A signal that does nothing is a success with a note, not a
+    #   failure, for example `Signal accepted (already_long)`; the notes are
+    #   `already_long`, `already_short`, `no_matching_position`,
+    #   `outside_entry_window` and `outside_trading_window`. A signal blocked
+    #   by the strategy's direction, or naming a leg that does not exist,
+    #   answers 400 `rejected_invalid_action`. An opposite entry squares the
+    #   existing side first, then opens. Signal actions skip the dedupe and
+    #   cooling-off windows. A leg on a derivatives exchange must name an
+    #   exact listed contract.
+    # @param action `"long_entry"`, `"long_exit"`, `"short_entry"` or
+    #   `"short_exit"`.
+    # @param ... Not accepted; present so the following arguments must be
+    #   named.
+    # @param leg_id Which leg the signal targets (sent as an integer). Wins
+    #   over `symbol` and `exchange` on the server when both are given.
+    # @param symbol Leg symbol, used when `leg_id` is absent.
+    # @param exchange Exchange for `symbol`.
+    # @return A named list with `status`, `result`, `message`,
+    #   `strategy_id` and `run_id`.
     signal = function(action, ..., leg_id = NULL, symbol = NULL, exchange = NULL) {
       no_extra_args("signal", ...)
       payload <- list(action = action)
@@ -156,64 +156,64 @@ OpenAlgoStrategy <- R6::R6Class(
       self$send(payload)
     },
 
-    #' @description Open or reverse into a long on one leg. See `signal()`.
-    #' @param ... Not accepted; present so the following arguments must be
-    #'   named.
-    #' @param leg_id Which leg the signal targets.
-    #' @param symbol Leg symbol, used when `leg_id` is absent.
-    #' @param exchange Exchange for `symbol`.
-    #' @return As `signal()`.
+    # @description Open or reverse into a long on one leg. See `signal()`.
+    # @param ... Not accepted; present so the following arguments must be
+    #   named.
+    # @param leg_id Which leg the signal targets.
+    # @param symbol Leg symbol, used when `leg_id` is absent.
+    # @param exchange Exchange for `symbol`.
+    # @return As `signal()`.
     long_entry = function(..., leg_id = NULL, symbol = NULL, exchange = NULL) {
       no_extra_args("long_entry", ...)
       self$signal("long_entry", leg_id = leg_id, symbol = symbol, exchange = exchange)
     },
 
-    #' @description Close a long on one leg. See `signal()`.
-    #' @param ... Not accepted; present so the following arguments must be
-    #'   named.
-    #' @param leg_id Which leg the signal targets.
-    #' @param symbol Leg symbol, used when `leg_id` is absent.
-    #' @param exchange Exchange for `symbol`.
-    #' @return As `signal()`.
+    # @description Close a long on one leg. See `signal()`.
+    # @param ... Not accepted; present so the following arguments must be
+    #   named.
+    # @param leg_id Which leg the signal targets.
+    # @param symbol Leg symbol, used when `leg_id` is absent.
+    # @param exchange Exchange for `symbol`.
+    # @return As `signal()`.
     long_exit = function(..., leg_id = NULL, symbol = NULL, exchange = NULL) {
       no_extra_args("long_exit", ...)
       self$signal("long_exit", leg_id = leg_id, symbol = symbol, exchange = exchange)
     },
 
-    #' @description Open or reverse into a short on one leg. See `signal()`.
-    #' @param ... Not accepted; present so the following arguments must be
-    #'   named.
-    #' @param leg_id Which leg the signal targets.
-    #' @param symbol Leg symbol, used when `leg_id` is absent.
-    #' @param exchange Exchange for `symbol`.
-    #' @return As `signal()`.
+    # @description Open or reverse into a short on one leg. See `signal()`.
+    # @param ... Not accepted; present so the following arguments must be
+    #   named.
+    # @param leg_id Which leg the signal targets.
+    # @param symbol Leg symbol, used when `leg_id` is absent.
+    # @param exchange Exchange for `symbol`.
+    # @return As `signal()`.
     short_entry = function(..., leg_id = NULL, symbol = NULL, exchange = NULL) {
       no_extra_args("short_entry", ...)
       self$signal("short_entry", leg_id = leg_id, symbol = symbol, exchange = exchange)
     },
 
-    #' @description Close a short on one leg. See `signal()`.
-    #' @param ... Not accepted; present so the following arguments must be
-    #'   named.
-    #' @param leg_id Which leg the signal targets.
-    #' @param symbol Leg symbol, used when `leg_id` is absent.
-    #' @param exchange Exchange for `symbol`.
-    #' @return As `signal()`.
+    # @description Close a short on one leg. See `signal()`.
+    # @param ... Not accepted; present so the following arguments must be
+    #   named.
+    # @param leg_id Which leg the signal targets.
+    # @param symbol Leg symbol, used when `leg_id` is absent.
+    # @param exchange Exchange for `symbol`.
+    # @return As `signal()`.
     short_exit = function(..., leg_id = NULL, symbol = NULL, exchange = NULL) {
       no_extra_args("short_exit", ...)
       self$signal("short_exit", leg_id = leg_id, symbol = symbol, exchange = exchange)
     },
 
-    #' @description Removed: the webhook it posted to no longer exists. The
-    #'   old surface took a symbol, a BUY or SELL action and a position size,
-    #'   and read the long only, short only or both mode from the strategy's
-    #'   configuration. There is no mapping this method could make on its own
-    #'   (BUY is `long_entry()` on a flat leg and `short_exit()` on a short
-    #'   one), so it always raises an error. Use `start()` and `stop()` for a
-    #'   batch strategy, or the four signal methods for a signal strategy.
-    #' @param symbol Unused.
-    #' @param action Unused.
-    #' @param position_size Unused.
+    # @description Removed: the webhook it posted to no longer exists. The
+    #   old surface took a symbol, a BUY or SELL action and a position size,
+    #   and read the long only, short only or both mode from the strategy's
+    #   configuration. There is no mapping this method could make on its own
+    #   (BUY is `long_entry()` on a flat leg and `short_exit()` on a short
+    #   one), so it always raises an error. Use `start()` and `stop()` for a
+    #   batch strategy, or the four signal methods for a signal strategy.
+    # @param symbol Unused.
+    # @param action Unused.
+    # @param position_size Unused.
     strategyorder = function(symbol, action, position_size = NULL) {
       base::stop(paste0(
         "Strategy.strategyorder() was removed: the webhook it posted to no longer ",
@@ -223,9 +223,9 @@ OpenAlgoStrategy <- R6::R6Class(
     }
   ),
   active = list(
-    #' @field webhook_url The webhook URL, `"<host_url>/strategy/webhook/<token>"`
-    #'   (read-only, built once and cached). It embeds the token, so it is a
-    #'   credential in its own right: do not log it.
+    # @field webhook_url The webhook URL, `"<host_url>/strategy/webhook/<token>"`
+    #   (read-only, built once and cached). It embeds the token, so it is a
+    #   credential in its own right: do not log it.
     webhook_url = function(value) {
       if (!missing(value)) {
         base::stop("webhook_url is read-only", call. = FALSE)

@@ -17,50 +17,50 @@ OpenAlgoAPI <- R6::R6Class(
   cloneable = FALSE,
   public = c(
     list(
-      #' @field verbose Feed logging level: 0 silent, 1 basic, 2 full debug.
+      # @field verbose Feed logging level: 0 silent, 1 basic, 2 full debug.
       verbose = 0L,
-      #' @field ws_port WebSocket server port.
+      # @field ws_port WebSocket server port.
       ws_port = NULL,
-      #' @field ws_host WebSocket host derived from `host`.
+      # @field ws_host WebSocket host derived from `host`.
       ws_host = NULL,
-      #' @field ws_url WebSocket URL.
+      # @field ws_url WebSocket URL.
       ws_url = NULL,
-      #' @field ws The underlying WebSocket connection, or `NULL`.
+      # @field ws The underlying WebSocket connection, or `NULL`.
       ws = NULL,
-      #' @field connected `TRUE` while the WebSocket is open.
+      # @field connected `TRUE` while the WebSocket is open.
       connected = FALSE,
-      #' @field authenticated `TRUE` once the WebSocket is authenticated.
+      # @field authenticated `TRUE` once the WebSocket is authenticated.
       authenticated = FALSE,
-      #' @field ltp_data Latest LTP per `"EXCHANGE:SYMBOL"`.
+      # @field ltp_data Latest LTP per `"EXCHANGE:SYMBOL"`.
       ltp_data = NULL,
-      #' @field quotes_data Latest quote per `"EXCHANGE:SYMBOL"`.
+      # @field quotes_data Latest quote per `"EXCHANGE:SYMBOL"`.
       quotes_data = NULL,
-      #' @field depth_data Latest depth per `"EXCHANGE:SYMBOL"`.
+      # @field depth_data Latest depth per `"EXCHANGE:SYMBOL"`.
       depth_data = NULL,
-      #' @field order_data Order updates received, most recent first (max 500).
+      # @field order_data Order updates received, most recent first (max 500).
       order_data = NULL,
-      #' @field ltp_callback Callback for LTP updates.
+      # @field ltp_callback Callback for LTP updates.
       ltp_callback = NULL,
-      #' @field quote_callback Callback for quote updates.
+      # @field quote_callback Callback for quote updates.
       quote_callback = NULL,
-      #' @field quotes_callback Reserved (kept for parity with the Python SDK).
+      # @field quotes_callback Reserved (kept for parity with the Python SDK).
       quotes_callback = NULL,
-      #' @field depth_callback Callback for depth updates.
+      # @field depth_callback Callback for depth updates.
       depth_callback = NULL,
-      #' @field order_callback Callback for order updates.
+      # @field order_callback Callback for order updates.
       order_callback = NULL,
-      #' @field auto_reconnect Reconnect and replay subscriptions after a drop.
+      # @field auto_reconnect Reconnect and replay subscriptions after a drop.
       auto_reconnect = TRUE,
 
-      #' @description Create a client. Prefer [api()].
-      #' @param api_key User's API key.
-      #' @param host Base URL for the API endpoints.
-      #' @param version API version.
-      #' @param timeout Request timeout in seconds.
-      #' @param ws_port WebSocket server port.
-      #' @param ws_url Custom WebSocket URL, overrides `host` and `ws_port`.
-      #' @param verbose Feed logging level (`FALSE`/0, `TRUE`/1 or 2).
-      #' @param auto_reconnect Reconnect automatically after a drop.
+      # @description Create a client. Prefer [api()].
+      # @param api_key User's API key.
+      # @param host Base URL for the API endpoints.
+      # @param version API version.
+      # @param timeout Request timeout in seconds.
+      # @param ws_port WebSocket server port.
+      # @param ws_url Custom WebSocket URL, overrides `host` and `ws_port`.
+      # @param verbose Feed logging level (`FALSE`/0, `TRUE`/1 or 2).
+      # @param auto_reconnect Reconnect automatically after a drop.
       initialize = function(api_key, host = "http://127.0.0.1:5000", version = "v1",
                             timeout = 120.0, ws_port = 8765, ws_url = NULL,
                             verbose = FALSE, auto_reconnect = TRUE) {
@@ -107,8 +107,8 @@ OpenAlgoAPI <- R6::R6Class(
         invisible(self)
       },
 
-      #' @description Print a summary without revealing the API key.
-      #' @param ... Unused.
+      # @description Print a summary without revealing the API key.
+      # @param ... Unused.
       print = function(...) {
         cat("<OpenAlgoAPI>\n")
         cat("  base_url: ", self$base_url, "\n", sep = "")

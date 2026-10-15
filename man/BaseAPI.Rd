@@ -3,34 +3,9 @@
 \name{BaseAPI}
 \alias{BaseAPI}
 \title{Base class for the OpenAlgo REST client}
-\arguments{
-\item{api_key}{User's API key.}
-
-\item{host}{Base URL for the API endpoints.}
-
-\item{version}{API version.}
-
-\item{timeout}{Request timeout in seconds.}
-}
 \description{
 Holds the configuration and the shared, connection-reusing HTTP handle used
 by every REST call, plus the request helpers. You normally do not create it
 directly: use \code{\link[=api]{api()}}, which inherits from it.
-
-Initialize the client configuration.
-
-Release the pooled HTTP connections.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{api_key}}{User's API key.}
-
-\item{\code{base_url}}{REST base URL, \code{"{host}/api/{version}/"}.}
-
-\item{\code{headers}}{Headers sent with every POST.}
-
-\item{\code{timeout}}{Request timeout in seconds.}
-}}
-
 \keyword{internal}

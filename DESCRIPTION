@@ -7,9 +7,10 @@ Description: Provides access to 'OpenAlgo' <https://openalgo.in>, a
     self-hosted algorithmic trading application that connects to a stock
     broker account. Wraps the 'OpenAlgo' REST API (orders, good till
     triggered orders, market data, account, options, strategy module,
-    notifications and market calendar utilities), the strategy webhook and
-    the 'WebSocket' market data feed. Function names, parameters and request
-    payloads follow the official 'OpenAlgo' 'Python' software development kit.
+    notifications and market calendar utilities), the receiver of strategy
+    signals sent by alerting tools and the 'WebSocket' market data feed.
+    Function names, parameters and request payloads follow the official
+    'OpenAlgo' 'Python' software development kit.
 License: MIT + file LICENSE
 URL: https://github.com/marketcalls/openalgo-R-library, https://docs.openalgo.in
 BugReports: https://github.com/marketcalls/openalgo-R-library/issues

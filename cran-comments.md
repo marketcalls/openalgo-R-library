@@ -1,3 +1,13 @@
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+* Rephrased the Description so it no longer uses the word flagged as
+  possibly misspelled ("webhook").
+* Removed the argument documentation from the 'OpenAlgoAPI' class topic,
+  which has no usage section (the "Rd files without \usage" NOTE on
+  r-devel).
+
 ## R CMD check results
 
 0 errors | 0 warnings | 1 note
